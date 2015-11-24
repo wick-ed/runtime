@@ -18,6 +18,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Basic network configuration
   config.vm.host_name = "${vagrant-box.name}"
 
+  # Omits setting an ssh key individual to the machine
+  # Uncomment for machine packaging!
+  # config.ssh.insert_key = false
+
   # Shell provisioning used for intial setup of box.
   # Please use if packaged boxes are unavailable or unwelcome
   # config.vm.provision "shell", path: "provision.sh"

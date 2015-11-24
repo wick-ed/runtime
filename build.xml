@@ -216,8 +216,24 @@
             </filterchain>
         </copy>
         <!-- expand the properties within our provisioning -->
-        <copy todir="${temp.dir}">
+        <copy todir="${temp.dir}" failonerror="false">
             <fileset dir="${basedir}/buildfiles/${os.family}/${os.distribution}">
+                <include name="provision.*"/>
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <copy todir="${temp.dir}" failonerror="false">
+            <fileset dir="${basedir}/buildfiles/${os.family}/${os.distribution}/generic">
+                <include name="provision.*"/>
+            </fileset>
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+        <copy todir="${temp.dir}" failonerror="false">
+            <fileset dir="${basedir}/buildfiles/${os.family}/${os.distribution}/${target-os.major.version}">
                 <include name="provision.*"/>
             </fileset>
             <filterchain>
