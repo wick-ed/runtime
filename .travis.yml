@@ -20,6 +20,12 @@ matrix:
         - docker
       script:
         - docker run --rm -v `pwd`:/build -w /build -e TRAVIS_TAG debian:9 bash -c "apt-get update; apt-get install -y ant git; ant dependencies-init; ant local-build -Dbuild.number=$BUILD_NUMBER -Dtarget-os.major.version=9 -Dtarget-os.minor.version=9"
+    - os: linux
+      dist: bionic
+      services:
+        - docker
+      script:
+        - docker run --rm -v `pwd`:/build -w /build -e TRAVIS_TAG debian:10 bash -c "apt-get update; apt-get install -y ant git; ant dependencies-init; ant local-build -Dbuild.number=$BUILD_NUMBER -Dtarget-os.major.version=10 -Dtarget-os.minor.version=2"
 
 deploy:
   provider: releases
