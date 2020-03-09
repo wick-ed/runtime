@@ -19,7 +19,6 @@
             <arg value="ant"/>
             <arg value="gcc"/>
             <arg value="g++"/>
-            <arg value="autoconf"/>
             <arg value="make"/>
             <arg value="curl"/>
             <arg value="bison"/>
@@ -42,12 +41,15 @@
             <arg value="libldap2-dev"/>
             <arg value="libicu-dev"/>
             <arg value="libxslt1-dev"/>
+            <arg value="autoconf"/>
         </exec>
         <!-- seems we need to compile our own openssl version due to unmeetable dependencies in PHP5.6 -->
         <exec dir="/tmp" executable="curl">
             <arg value="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1t.tar.gz"/>
             <arg value="-o openssl-1.0.1t.tar.gz"/>
         </exec>
+        <get src="https://www.openssl.org/source/old/1.0.1/openssl-1.0.1t.tar.gz"
+             dest="/tmp/openssl-1.0.1t.tar.gz"/>
         <exec dir="/tmp" executable="tar">
             <arg value="-xzf openssl-1.0.1t.tar.gz"/>
         </exec>
@@ -63,10 +65,8 @@
         <exec dir="/tmp/openssl-1.0.1t" executable="make">
             <arg value="install"/>
         </exec>
-        <exec dir="/tmp/openssl-1.0.1t" executable="curl">
-            <arg value="-o /opt/openssl/ssl/cert.pem"/>
-            <arg value="http://curl.haxx.se/ca/cacert.pem"/>
-        </exec>
+        <get src="https://curl.haxx.se/ca/cacert.pem"
+             dest="/opt/openssl/ssl/cert.pem"/>
 
         <!-- Bugfix for missing symlinks -->
         <exec dir="/usr/lib" executable="ln">

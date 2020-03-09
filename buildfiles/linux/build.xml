@@ -24,8 +24,8 @@
     <!-- ==================================================================== -->
     <target name="prepare-source" description="Prepares the PHP sources for the runtime.">
         <!-- Untar the PHP source into the build environment -->
-        <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${target.dir}" compression="gzip"/>
-        <chmod perm="755" dir="${target.dir}/php-${runtime.php.version}/build" includes="**/*"/>
+        <untar src="${lib.dir}/php-src-php-${runtime.php.version}.tar.gz" dest="${target.dir}" compression="gzip"/>
+        <chmod perm="755" dir="${target.dir}/php-src-php-${runtime.php.version}/build" includes="**/*"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -34,42 +34,42 @@
     <target name="prepare-pecl-extension" description="Prepares the PECL sources for static compilation (not active!!)">
         <!-- prepare php ext appserver sources sources for static compilation -->
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/appserver">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/appserver">
             <fileset dir="${target.dir}/appserver-${runtime.ext-appserver.version}"/>
         </move>
         <!-- prepare PECL pthread sources for static compilation -->
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/pthreads">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/pthreads">
             <fileset dir="${target.dir}/pthreads-${runtime.pthreads.version}"/>
         </move>
         <!-- prepare PECL apcu sources for static compilation -->
         <untar src="${lib.dir}/apcu-${runtime.apcu.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/apcu">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/apcu">
             <fileset dir="${target.dir}/apcu-${runtime.apcu.version}"/>
         </move>
         <!-- prepare PECL operator sources for static compilation -->
         <untar src="${lib.dir}/operator-${runtime.operator.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/operator">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/operator">
             <fileset dir="${target.dir}/operator-${runtime.operator.version}"/>
         </move>
         <!-- prepare PECL pecl_http sources for static compilation -->
         <untar src="${lib.dir}/pecl_http-${runtime.pecl_http.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/http">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/http">
             <fileset dir="${target.dir}/pecl_http-${runtime.pecl_http.version}"/>
         </move>
         <!-- prepare PECL AOP sources for static compilation -->
         <untar src="${lib.dir}/AOP-${runtime.AOP.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/AOP">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/AOP">
             <fileset dir="${target.dir}/AOP-${runtime.AOP.version}"/>
         </move>
         <!-- prepare PECL libevent sources for static compilation -->
         <untar src="${lib.dir}/libevent-${runtime.libevent.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/libevent">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/libevent">
             <fileset dir="${target.dir}/libevent-${runtime.libevent.version}"/>
         </move>
         <!-- prepare PECL redis sources for static compilation -->
         <untar src="${lib.dir}/redis-${runtime.redis.version}.tgz" dest="${target.dir}" compression="gzip"/>
-        <move todir="${target.dir}/php-${runtime.php.version}/ext/redis">
+        <move todir="${target.dir}/php-src-php-${runtime.php.version}/ext/redis">
             <fileset dir="${target.dir}/redis-${runtime.redis.version}"/>
         </move>
     </target>
@@ -142,22 +142,49 @@
 
         <!-- clean any possible remained of former builds and create the build configuration -->
         <antcall target="make-clean" />
-        <delete file="${target.dir}/php-${runtime.php.version}/aclocal.m4"/>
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
+        <delete file="${target.dir}/php-src-php-${runtime.php.version}/aclocal.m4"/>
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="sh">
             <arg value="buildconf"/>
             <arg line="--force"/>
         </exec>
 
         <!-- log PHP compile configuration -->
-        <echo message="Now compiling PHP using configure params: ${runtime.compile.configuration}"/>
+        <echo message="Now compiling PHP using configure params: --prefix=${runtime.compile.prefix} \
+                                --with-pear=${runtime.compile.prefix}/lib/php/pear \
+                                --with-libdir=${runtime.compile.libdir} \
+                                --with-config-file-path=${runtime.compile.prefix}/etc \
+                                --with-config-file-scan-dir=${runtime.compile.prefix}/etc/conf.d \
+                                --with-mysql-sock=/var/run/mysqld/mysqld.sock \
+                                --with-zlib \
+                                --with-mcrypt=${libmcrypt.dir} \
+                                --with-pdo-mysql \
+                                --with-curl=shared \
+                                --with-gd \
+                                --with-jpeg-dir=${libjpeg.dir} \
+                                --with-png-dir=${libpng.dir} \
+                                --with-openssl=${libssl.dir} \
+                                --with-ldap \
+                                --with-xsl=shared \
+                                --with-mysql=shared \
+                                --with-mysqli=shared \
+                                --enable-fpm \
+                                --enable-bcmath=shared \
+                                --enable-soap=shared \
+                                --enable-opcache=shared \
+                                --enable-phar=shared \
+                                --enable-sockets=shared \
+                                --enable-zip=shared \
+                                --enable-mbstring=shared \
+                                --enable-intl=shared \
+                                --enable-maintainer-zts"/>
 
         <!-- configure, compile and install PHP binary -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="sh">
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="sh">
             <env key="CC" value="${runtime.cc}"/>
             <env key="EXTRA_LIBS" value="-llber"/>
-            <arg line="configure ${runtime.compile.configuration}"/>
+            <arg line="configure --prefix=${runtime.compile.prefix} --with-pear=${runtime.compile.prefix}/lib/php/pear --with-libdir=${runtime.compile.libdir} --with-config-file-path=${runtime.compile.prefix}/etc --with-config-file-scan-dir=${runtime.compile.prefix}/etc/conf.d --with-mysql-sock=/var/run/mysqld/mysqld.sock --with-zlib --with-mcrypt=${libmcrypt.dir} --with-pdo-mysql --with-curl=shared --with-gd --with-jpeg-dir=${libjpeg.dir} --with-png-dir=${libpng.dir} --with-openssl=${libssl.dir} --with-ldap --with-xsl=shared --with-mysql=shared --with-mysqli=shared --enable-fpm --enable-bcmath=shared --enable-soap=shared --enable-opcache=shared --enable-phar=shared --enable-sockets=shared --enable-zip=shared --enable-mbstring=shared --enable-intl=shared --enable-maintainer-zts"/>
         </exec>
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="make">
             <arg value="-j2"/>
         </exec>
 
@@ -165,7 +192,7 @@
         <antcall target="run-php-tests"/>
 
         <!-- install the binaries -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="make">
             <arg value="install"/>
         </exec>
 
@@ -190,7 +217,7 @@
     <!-- Runs the PHP tests                                                   -->
     <!-- ==================================================================== -->
     <target name="run-php-tests" if="${runtime.php.run-tests}" description="Runs the PHP tests.">
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make">
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="make">
             <arg value="test"/>
         </exec>
     </target>

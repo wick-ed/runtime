@@ -67,8 +67,8 @@
     <!-- Untar the PHP source into the development dir                        -->
     <!-- ==================================================================== -->
     <target name="prepare-php-src" description="Untar the PHP source into the development dir.">
-        <!-- <delete dir="${php-buildtree.dir}\php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
-        <untar src="${lib.dir}/php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
+        <!-- <delete dir="${php-buildtree.dir}\php-src-php-${runtime.php.version}" includeemptydirs="true" quiet="false" verbose="false" failonerror="true"/> -->
+        <untar src="${lib.dir}/php-src-php-${runtime.php.version}.tar.gz" dest="${php-buildtree.dir}" compression="gzip"/>
     </target>
 
     <!-- ==================================================================== -->
@@ -88,7 +88,7 @@
         <!-- untar the appserver extension source into the sdk environment -->
         <untar src="${lib.dir}/ext-appserver-${runtime.ext-appserver.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
         <!-- move the src files into the folder they belong -->
-        <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
+        <copy todir="${php-buildtree.dir}/php-src-php-${runtime.php.version}/ext/appserver" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-sdk.dir}/appserver-${runtime.ext-appserver.version}">
                 <include name="**/*" />
             </fileset>
@@ -110,7 +110,7 @@
         <!-- untar the pthreads extension source into the sdk environment -->
         <untar src="${lib.dir}/pthreads-${runtime.pthreads.version}.tgz" dest="${php-sdk.dir}" compression="gzip"/>
         <!-- move the src files into the folder they belong -->
-        <copy todir="${php-buildtree.dir}/php-${runtime.php.version}/ext/pthreads" preservelastmodified="true" overwrite="true">
+        <copy todir="${php-buildtree.dir}/php-src-php-${runtime.php.version}/ext/pthreads" preservelastmodified="true" overwrite="true">
             <fileset dir="${php-sdk.dir}/pthreads-${runtime.pthreads.version}">
                 <include name="**/*" />
             </fileset>
@@ -225,7 +225,7 @@
         </exec>
         <!-- Finally move the created dll files into the "target" dir where they get picked up -->
         <copy todir="${target.dir}" preservelastmodified="true" overwrite="true">
-            <fileset dir="${php-buildtree.dir}/php-${runtime.php.version}/Release_TS">
+            <fileset dir="${php-buildtree.dir}/php-src-php-${runtime.php.version}/Release_TS">
                 <include name="**/*.dll" />
             </fileset>
         </copy>
@@ -248,7 +248,7 @@
         <antcall target="build-binaries"/>
 
         <!-- extract the PHP/PECL binaries into the target folder -->
-        <unzip src="${lib.dir}/php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
+        <unzip src="${lib.dir}/php-src-php-${runtime.php.version}-Win32-VC${compiler-version}-${os.architecture}.zip" dest="${target.dir}/appserver/php"/>
         <unzip src="${lib.dir}/php_apcu-${runtime.apcu.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/apcu"/>
         <unzip src="${lib.dir}/php_event-${runtime.event.version}-5.6-ts-vc${compiler-version}-${os.architecture}.zip" dest="${target.dir}/event"/>
 

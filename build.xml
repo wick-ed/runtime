@@ -156,9 +156,9 @@
         <!-- download the composer installer -->
         <condition property="make-clean.needed">
             <or>
-                <available file="${target.dir}/php-${runtime.php.version}/makefile" />
-                <available file="${target.dir}/php-${runtime.php.version}/Makefile" />
-                <available file="${target.dir}/php-${runtime.php.version}/GNUMakefile" />
+                <available file="${target.dir}/php-src-php-${runtime.php.version}/makefile" />
+                <available file="${target.dir}/php-src-php-${runtime.php.version}/Makefile" />
+                <available file="${target.dir}/php-src-php-${runtime.php.version}/GNUMakefile" />
             </or>
         </condition>
     </target>
@@ -168,7 +168,7 @@
     <!-- ==================================================================== -->
     <target name="make-clean" depends="check-make-clean-needed" if="make-clean.needed" description="Executes make clean if it is needed.">
         <!-- execute the "make clean" command -->
-        <exec dir="${target.dir}/php-${runtime.php.version}" executable="make" failonerror="true">
+        <exec dir="${target.dir}/php-src-php-${runtime.php.version}" executable="make" failonerror="true">
             <arg value="clean"/>
         </exec>
     </target>
